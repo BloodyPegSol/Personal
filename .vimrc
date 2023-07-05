@@ -1,4 +1,22 @@
-filetype plugin on
+" Enter the current millenium
+"set noncompatible
+
+"**************************************************************************
+" Search down into subfolders
+" Provides tab-completion for all file-related tasks
+set path+=**
+
+"Display all matching filds when we press tab
+set wildmenu
+
+" Tweaks for browsing using NETRW
+let g:netrw_browse_split=4 	"Open in prior windows
+let g:netrw_altv=1		"Open splits to the right
+let g:netrw_lsitstyle=3		"Tree view
+let g:netrw_list_hide=netrw_gitignore#Hide()		
+
+
+"**************************************************************************
 
 " IMPORTANT: win32 users will need to have 'shellslash' set so that latex
 " can be called correctly.
@@ -40,28 +58,38 @@ let g:netrw_liststyle= 3	" Shows the tree listing
 "************************************************************************"
 "FUNCTIONS"
 
-function! LE(environment)
+function! LE(...)
     let l:line = line('.')
-    let l:text = ["\\begin{".a:environment."}<++>","\\end{".a:environment."}"]
+    if (a:0 == 2)   
+    	let l:text = ["\\begin{".a:1."}{".a:2."}<++>","\\end{".a:1."}"]
+    else
+    	let l:text = ["\\begin{".a:1."}<++>","\\end{".a:1."}"]
+    endif
     call append(l:line, l:text)
 endfunction
    
-function! Le(environment)
+function! Le(...)
     let l:line = line('.')
-    let l:text = ["\\begin{".a:environment."}<++>\\end{".a:environment."}"]
+    if (a:0 == 2)
+    	let l:text = ["\\begin{".a:1."}{".a:2."}<++>\\end{".a:1."}"]
+    else
+    	let l:text = ["\\begin{".a:1."}<++>\\end{".a:1."}"]
+    endif
     call append(l:line, l:text)
     normal! gJ
 endfunction
 "************************************************************************"
 "COMMANDS"
 
-command! -nargs=1  LE :call LE(<q-args>)
-command! -nargs=1  Le :call Le(<q-args>)
+command! -nargs=*  LE :call LE(<f-args>)
+command! -nargs=*  Le :call Le(<f-args>)
+command! -nargs=+  Cfun :call append(line('^'),["<args>()","{","<++>","}"])
+command! MakeTags !ctags -R .
 "************************************************************************"
 "MAPS FOR BASIC_MATH.TEX TEMPLATE"
 
 
-"IMPAS"
+"IMAPS"
 "Environment related"
 
 "PDF compiling"
@@ -72,7 +100,30 @@ command! -nargs=1  Le :call Le(<q-args>)
 
 "NMAPS"
 "ENVIRONMENT RELATED"
-:nmap bp' \begin{problem}<CR> <CR>\end{problem}
-:nmap btf' \begin{figure}<CR>\begin{tikzpicture}<CR><CR>\end{tikzpicture}<C    R>\centering<CR>\caption{<++>}<CR>\label{<++>}<CR>\end{figure}<++>
+
+
 "PDF compiling"
+
+
+
+"NOREMAP"
+" Go to tab by number of buffer
+
+:noremap ,1 1gt
+:noremap ,2 2gt
+:noremap ,3 3gt
+:noremap ,4 4gt
+
+" Jump between windows in split mode
+:nnoremap ,v :vsplit<cr>
+:inoremap ,v <ESC>:vsplit<cr>
+:nnoremap ,w :wincmd w<cr>
+:inoremap ,w <ESC>:wincmd w<cr>
+
+" SNIPPETS:
+" EXAMPLES:
+"nnoremap ,html :-1read $HOME/.vim/.skeleton.html<CR>3jwf<a
+"************************************************************************"
+"SYNTAX"
+syntax on
 

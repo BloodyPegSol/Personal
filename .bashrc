@@ -54,22 +54,49 @@ unset env
 #Some variable for frequently used directories
 
 alias lp.="cd /home/juancarrizales/Documents/LATEX\ PROJECTS"
-alias lumerical="/opt/lumerical/v222/bin/launcher"
 alias estadosolido=" cd /home/juancarrizales/Documents/TEC/5S/1P/Estado_Solido"
-alias fotonico="cd /home/juancarrizales/Documents/TEC/5S/1P/Sistemas_Fotonicos"
-alias nanof="cd /home/juancarrizales/Documents/TEC/5S/2P/Nanofluídica"
-alias torb="/opt/tor-browser_en-US/start-tor-browser.desktop"
-alias datawarrior="/opt/datawarrior/datawarrior"
+alias torb="cd /opt/tor-browser_en-US/; ./start-tor-browser.desktop; cd"
 alias pcloud="/opt/pcloud_/pcloud"
+alias yb="cd ~/YOCTO/poky/build"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
-
+alias c="clear"
 
 #Useful commands
 
+#RAPID C/C++ COMPILATION
+#
 function rcc(){
-	gcc -o run.exe $1; ./run.exe; rm run.exe
+	if [[ $1 == *.c ]]
+	then
+		gcc -Wall -Wshadow -o run.exe $1; ./run.exe ${@:2}; rm run.exe
+        elif [[ $1 == *.cpp ]]
+	then
+		g++ -o run.exe $@; ./run.exe ${@:2}; rm run.exe
+	else
+		echo "Argument must be .cpp or .c"
+	fi
 }
+
+#RAPID NASM COMPILATION
+#
+function rnasm(){
+	if [[ $1 == *.asm ]]
+	then
+		nasm -f elf64 $1 -o exe.o; ld exe.o -o run.exe; ./run.exe ${@:2}; rm run.exe
+	fi
+}	
+
+
+
+
+#Setting up ORCA
+#export PATH="$HOME/orca:$PATH"; export LD_LIBRARY_PATH="$HOME/orca:$LD_LIBRARY_PATH"
+
+#Setting up SINGULAR
+ export path=$HOME/PERSONAL/SINGULAR/install/bin/:$PATH
+ 
+ PS1="\e[1;36m[[\e[m\e[1;35m\u@\h\e[m \e[1;31m\W\e[m\e[1;36m]]\e[m\n\e[5;32m<?>\e[m$ "
